@@ -44,6 +44,16 @@
     </script>
 </body>
 </html>
+
+            // 触发 IPv6 解析请求
+            img.src = `http://${ipv6TestHost}/test?${Date.now()}`;
+        }
+
+        // 页面加载后立即检测
+        window.onload = checkIPv6Support;
+    </script>
+</body>
+</html>
             font-weight: bold;
             margin-bottom: 10px;
         }
