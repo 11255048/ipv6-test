@@ -2,44 +2,107 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>IPv6 检测跳转</title>
+    <title>IPv6 网络检测</title>
     <style>
-        body { text-align: center; padding-top: 100px; font-family: Arial, sans-serif; }
-        .error { color: #e74c3c; font-size: 18px; }
+        body { 
+            text-align: center; 
+            padding-top: 100px; 
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .loading {
+            color: #3498db;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .error { 
+            color: #e74c3c; 
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .note {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div id="result"></div>
+    <div class="container">
+        <h1>网络环境检测</h1>
+        <div id="result">
+            <p class="loading">正在检测IPv6连接...</p>
+        </div>
+        <div id="options" style="display: none;">
+            <!-- 选项将在此动态生成 -->
+        </div>
+        <p class="note">检测过程可能需要几秒钟</p>
+    </div>
 
     <script>
-        // 目标 IPv6 地址
         const ipv6Target = "http://openlist.帝acg.xyz";
-        const resultDom = document.getElementById("result");
-
-        // 检测 IPv6 支持的核心方法
+        const ipv4Target = "http://ipv4-openlist.帝acg.xyz";
+        
         function checkIPv6Support() {
-            // 创建 IPv6 测试地址（仅用于检测，无需真实服务）
-            const ipv6TestHost = "ipv6.google.com"; 
+            const resultDom = document.getElementById("result");
+            const optionsDom = document.getElementById("options");
+            
             const img = new Image();
             let timeout = null;
-
-            // 检测成功：浏览器可解析 IPv6 地址并发起请求
+            
             img.onload = img.onerror = function() {
                 clearTimeout(timeout);
                 window.location.href = ipv6Target;
             };
-
-            // 检测超时（大概率无 IPv6 环境）
+            
             timeout = setTimeout(function() {
-                resultDom.innerHTML = '<p class="error">检测到你当前无 IPv6 网络环境，无法访问目标地址</p>';
                 img.onload = img.onerror = null;
+                showNoIPv6Options();
             }, 3000);
-
-            // 触发 IPv6 解析请求
-            img.src = `http://${ipv6TestHost}/test?${Date.now()}`;
+            
+            img.src = `https://ipv6.google.com/favicon.ico?${Date.now()}`;
         }
-
-        // 页面加载后立即检测
+        
+        function showNoIPv6Options() {
+            const resultDom = document.getElementById("result");
+            const optionsDom = document.getElementById("options");
+            
+            resultDom.innerHTML = '<p class="error">未检测到IPv6连接</p>';
+            optionsDom.style.display = "block";
+            optionsDom.innerHTML = `
+                <p>请选择访问方式：</p>
+                <div>
+                    <button onclick="useVPN()">使用VPN获取IPv6</button>
+                    <button onclick="useIPv4()">使用IPv4访问（速度较慢）</button>
+                </div>
+            `;
+        }
+        
+        function useVPN() {
+            window.location.href = "https://帝acg.xyz/vice/vice/VPN_user_choose/VPN_method_2.html";
+        }
+        
+        function useIPv4() {
+            window.location.href = ipv4Target;
+        }
+        
         window.onload = checkIPv6Support;
     </script>
 </body>
